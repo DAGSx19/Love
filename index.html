@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeniden mi?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #170b12;
+    --bg-alt: #24101a;
+    --card: #2c1420;
+    --wine: #7a2048;
+    --rose: #e0a3ae;
+    --gold: #c9a24a;
+    --cream: #f4e6de;
+    --muted: #b98a94;
+    --line: rgba(201,162,74,0.28);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Manrope', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--wine); color: var(--cream); }
+
+  .display{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  a{color: var(--rose);}
+
+  /* ambient candle glow */
+  .glow{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(122,32,72,0.35), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 85% 80%, rgba(201,162,74,0.12), transparent 60%);
+    z-index: 0;
+    animation: flicker 7s ease-in-out infinite;
+  }
+  @keyframes flicker{
+    0%,100%{opacity:1;}
+    45%{opacity:0.85;}
+    50%{opacity:1;}
+    75%{opacity:0.9;}
+  }
+
+  section{
+    position: relative;
+    z-index: 1;
+    padding: 6rem 1.5rem;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .hairline{
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 2rem auto;
+    opacity: 0.6;
+  }
+
+  .eyebrow{
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 4rem;
+  }
+
+  .hero .eyebrow{ margin-bottom: 1.4rem; }
+
+  .hero h1{
+    font-size: clamp(2.4rem, 8vw, 4.6rem);
+    line-height: 1.08;
+    color: var(--cream);
+    max-width: 12ch;
+  }
+
+  .hero h1 em{ color: var(--rose); font-style: italic; }
+
+  .hero p{
+    margin-top: 1.6rem;
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 42ch;
+  }
+
+  .scroll-cue{
+    margin-top: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .scroll-cue span{
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .pulse-line{ width: 1px; height: 44px; background: linear-gradient(var(--gold), transparent); animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+
+  /* ---------- HEARTBEAT DIVIDER ---------- */
+  .heartbeat{
+    display:block;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    opacity: 0.55;
+  }
+  .heartbeat path{
+    fill:none;
+    stroke: var(--gold);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 340;
+    stroke-dashoffset: 340;
+    animation: draw 3.4s ease-in-out infinite;
+  }
+  @keyframes draw{
+    0%{ stroke-dashoffset: 340; }
+    45%{ stroke-dashoffset: 0; }
+    100%{ stroke-dashoffset: -340; }
+  }
+
+  /* ---------- COUNTERS ---------- */
+  .counters-title{
+    font-size: clamp(1.7rem, 5vw, 2.4rem);
+    text-align: center;
+    color: var(--cream);
+    margin-bottom: 3rem;
+  }
+
+  .counter-card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2rem 1.6rem;
+    margin-bottom: 1.6rem;
+    text-align: center;
+  }
+
+  .counter-card .label{
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 1.1rem;
+  }
+
+  .counter-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+  }
+
+  .counter-grid .num{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: clamp(1.6rem, 6vw, 2.6rem);
+    color: var(--gold);
+    line-height: 1;
+  }
+  .counter-grid .unit{
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    display:block;
+  }
+
+  .counter-date{
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ---------- SONG ---------- */
+  .song-wrap{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2.4rem 1.6rem;
+    text-align: center;
+  }
+
+  .vinyl{
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    margin: 0 auto 1.6rem;
+    background:
+      radial-gradient(circle at center, var(--gold) 0 6%, #1a0d13 7% 14%, #1a0d13 14%),
+      repeating-radial-gradient(circle at center, #100810 0 2px, #1a0d13 2px 4px);
+    animation: spin 5s linear infinite;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .song-title{
+    font-size: 1.6rem;
+    color: var(--cream);
+    margin-bottom: 0.3rem;
+  }
+  .song-artist{
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .yt-frame{
+    position: relative;
+    padding-bottom: 30%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 3px;
+    border: 1px solid var(--line);
+  }
+  .yt-frame iframe{
+    position: absolute;
+    top:0; left:0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* ---------- DIZI / QUOTE ---------- */
+  .quote-section{ text-align: center; }
+
+  .phone-frame{
+    width: 220px;
+    margin: 0 auto 2.4rem;
+    border: 6px solid var(--card);
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--line), 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .phone-frame .yt-frame{
+    padding-bottom: 177.7%;
+    border: none;
+    border-radius: 0;
+  }
+
+  .big-quote{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 6.5vw, 2.9rem);
+    line-height: 1.35;
+    color: var(--rose);
+    max-width: 16ch;
+    margin: 0 auto;
+  }
+
+  .quote-source{
+    margin-top: 1.4rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---------- THE QUESTION ---------- */
+  .question-section{
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .question-title{
+    font-size: clamp(2rem, 7vw, 3.2rem);
+    color: var(--cream);
+    margin-bottom: 0.6rem;
+  }
+
+  .question-sub{
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-bottom: 3.4rem;
+  }
+
+  .play-area{
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 260px;
+    margin: 0 auto;
+  }
+
+  .btn{
+    position: absolute;
+    top: 50%;
+    border: none;
+    border-radius: 999px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease;
+  }
+
+  #btnEvet{
+    left: 50%;
+    transform: translate(-110%, -50%);
+    background: var(--wine);
+    color: var(--cream);
+    padding: 1rem 2.2rem;
+    font-size: 1.05rem;
+    box-shadow: 0 8px 24px rgba(122,32,72,0.4);
+  }
+  #btnEvet:hover{ transform: translate(-110%, -50%) scale(1.06); }
+  #btnEvet.grown{
+    padding: 1.6rem 3.4rem;
+    font-size: 1.5rem;
+  }
+
+  #btnHayir{
+    left: 50%;
+    transform: translate(10%, -50%);
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 1rem 2.2rem;
+    font-size: 1.05rem;
+  }
+
+  .tease{
+    margin-top: 2.6rem;
+    min-height: 1.4rem;
+    font-size: 0.92rem;
+    color: var(--rose);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .reveal{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+  .reveal.show{ display: flex; }
+  .reveal h2{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(2.2rem, 8vw, 3.4rem);
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+  .reveal p{ color: var(--muted); }
+
+  .heart{
+    position: fixed;
+    top: -40px;
+    font-size: 1.4rem;
+    pointer-events: none;
+    z-index: 5;
+    animation: fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform: translateY(105vh) rotate(320deg); opacity: 0; }
+  }
+
+  footer{
+    text-align: center;
+    padding: 3rem 1.5rem 4rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 480px){
+    section{ padding: 4.5rem 1.2rem; }
+    .counter-grid{ gap: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">Sana bir şey soracağım</div>
+  <h1>Bazı hikayeler <em>bitmiş</em> gibi görünür,<br>ama sadece <em>ara verir</em>.</h1>
+  <p>Aşağı in, önce hatırlayalım — sonra soracağım.</p>
+  <div class="scroll-cue">
+    <div class="pulse-line"></div>
+    <span>kaydır</span>
+  </div>
+</section>
+
+<svg class="heartbeat" viewBox="0 0 340 60" preserveAspectRatio="none">
+  <path d="M0 30 H110 L125 10 L140 50 L155 30 H230 L245 15 L255 45 L265 30 H340" />
+</svg>
+
+<!-- COUNTERS -->
+<section>
+  <div class="counters-title display">İki tarih, hâlâ sayıyorum</div>
+
+  <div class="counter-card">
+    <div class="label">Tanıştığımız günden bu yana</div>
+    <div class="counter-grid" id="c1">
+      <div><span class="num" id="c1-d">0</span><span class="unit">gün</span></div>
+      <div><span class="num" id="c1-h">0</span><span class="unit">saat</span></div>
+      <div><span class="num" id="c1-m">0</span><span class="unit">dakika</span></div>
+      <div><span class="num" id="c1-s">0</span><span class="unit">saniye</span></div>
+    </div>
+    <div class="counter-date">28 Temmuz 2026</div>
+  </div>
+
+  <div class="counter-card">
+    <div class="label">Sana ilk açıldığım andan bu yana</div>
+    <div class="counter-grid" id="c2">
+      <div><span class="num" id="c2-d">0</span><span class="unit">gün</span></div>
+      <div><span class="num" id="c2-h">0</span><span class="unit">saat</span></div>
+      <div><span class="num" id="c2-m">0</span><span class="unit">dakika</span></div>
+      <div><span class="num" id="c2-s">0</span><span class="unit">saniye</span></div>
+    </div>
+    <div class="counter-date">10 Ağustos 2026 · 22:21</div>
+  </div>
+</section>
+
+<!-- SONG -->
+<section>
+  <div class="song-wrap">
+    <div class="vinyl"></div>
+    <div class="song-title display">Anlamazdın</div>
+    <div class="song-artist">Ayla Dikmen</div>
+    <div class="yt-frame">
+      <iframe src="https://www.youtube.com/embed/L4FRldiA06A" title="Ayla Dikmen - Anlamazdın" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- DIZI + QUOTE -->
+<section class="quote-section">
+  <div class="eyebrow">Kirli Sepeti'nden</div>
+  <div class="hairline"></div>
+  <div class="phone-frame">
+    <div class="yt-frame">
+      <iframe src="https://www.youtube.com/embed/74rmBNUb5EY" title="Kirli Sepeti kesit" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="big-quote">"Bitti sandığımız yerden değil,<br>bıraktığımız yerden devam edelim."</div>
+</section>
+
+<!-- QUESTION -->
+<section class="question-section">
+  <div id="askState">
+    <div class="question-title display">Benimle yeniden çıkar mısın?</div>
+    <div class="question-sub">tek bir doğru cevap var</div>
+
+    <div class="play-area" id="playArea">
+      <button class="btn" id="btnEvet">Evet</button>
+      <button class="btn" id="btnHayir">Hayır</button>
+    </div>
+
+    <div class="tease" id="tease"></div>
+  </div>
+
+  <div class="reveal" id="reveal">
+    <h2>Yeniden başlıyoruz. 💛</h2>
+    <p>Kaldığımız yerden devam.</p>
+  </div>
+</section>
+
+<footer>28.07.2026 — devam ediyor</footer>
+
+<script>
+  // ---- live counters ----
+  const start1 = new Date("2026-07-28T00:00:00");
+  const start2 = new Date("2026-08-10T22:21:00");
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function updateCounter(start, prefix){
+    const now = new Date();
+    let diff = Math.max(0, now - start);
+    const d = Math.floor(diff / 86400000); diff -= d*86400000;
+    const h = Math.floor(diff / 3600000); diff -= h*3600000;
+    const m = Math.floor(diff / 60000); diff -= m*60000;
+    const s = Math.floor(diff / 1000);
+    document.getElementById(prefix+'-d').textContent = d;
+    document.getElementById(prefix+'-h').textContent = pad(h);
+    document.getElementById(prefix+'-m').textContent = pad(m);
+    document.getElementById(prefix+'-s').textContent = pad(s);
+  }
+
+  function tick(){
+    updateCounter(start1, 'c1');
+    updateCounter(start2, 'c2');
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- evet / hayır game ----
+  const playArea = document.getElementById('playArea');
+  const btnEvet = document.getElementById('btnEvet');
+  const btnHayir = document.getElementById('btnHayir');
+  const teaseEl = document.getElementById('tease');
+
+  const teases = [
+    "yok öyle kolay kolay kaçış 😏",
+    "bu buton senin için çalışmıyor 😄",
+    "kaçsan da bulurum, ama evet daha kolay",
+    "kalbim burada bekliyor, oyalanma",
+    "az kaldı, evet'e bas hadi 💛",
+    "hayır diye bir seçenek yok bu sayfada"
+  ];
+
+  let dodging = false;
+
+  function randomPos(){
+    const areaW = playArea.clientWidth;
+    const areaH = playArea.clientHeight;
+    const btnW = btnHayir.offsetWidth || 140;
+    const btnH = btnHayir.offsetHeight || 50;
+    const x = Math.random() * (areaW - btnW);
+    const y = Math.random() * (areaH - btnH);
+    return {x, y};
+  }
+
+  function dodge(){
+    if(dodging) return;
+    dodging = true;
+    const {x, y} = randomPos();
+    btnHayir.style.left = x + 'px';
+    btnHayir.style.top = y + 'px';
+    btnHayir.style.transform = 'none';
+    teaseEl.textContent = teases[Math.floor(Math.random()*teases.length)];
+    setTimeout(()=>{ dodging = false; }, 260);
+  }
+
+  function distToBtn(px, py){
+    const rect = btnHayir.getBoundingClientRect();
+    const areaRect = playArea.getBoundingClientRect();
+    const bx = rect.left - areaRect.left + rect.width/2;
+    const by = rect.top - areaRect.top + rect.height/2;
+    return Math.hypot(px - bx, py - by);
+  }
+
+  playArea.addEventListener('mousemove', (e)=>{
+    const areaRect = playArea.getBoundingClientRect();
+    const px = e.clientX - areaRect.left;
+    const py = e.clientY - areaRect.top;
+    if(distToBtn(px, py) < 90) dodge();
+  });
+
+  playArea.addEventListener('touchmove', (e)=>{
+    const t = e.touches[0];
+    const areaRect = playArea.getBoundingClientRect();
+    const px = t.clientX - areaRect.left;
+    const py = t.clientY - areaRect.top;
+    if(distToBtn(px, py) < 100) dodge();
+  }, {passive:true});
+
+  btnHayir.addEventListener('mouseenter', dodge);
+  btnHayir.addEventListener('click', (e)=>{
+    e.preventDefault();
+    dodge();
+  });
+  btnHayir.addEventListener('touchstart', (e)=>{
+    e.preventDefault();
+    dodge();
+  });
+
+  function spawnHearts(){
+    const emojis = ['💛','🤍','✨'];
+    for(let i=0;i<26;i++){
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.animationDuration = (3 + Math.random()*2.5) + 's';
+      h.style.fontSize = (1 + Math.random()*1.2) + 'rem';
+      document.body.appendChild(h);
+      setTimeout(()=> h.remove(), 6000);
+    }
+  }
+
+  btnEvet.addEventListener('click', ()=>{
+    btnEvet.classList.add('grown');
+    spawnHearts();
+    setTimeout(()=>{
+      document.getElementById('askState').style.display = 'none';
+      document.getElementById('reveal').classList.add('show');
+      spawnHearts();
+    }, 550);
+  });
+</script>
+
+</body>
+</html>
