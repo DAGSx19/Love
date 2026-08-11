@@ -240,20 +240,24 @@
     margin-bottom: 1.8rem;
   }
 
-  .yt-frame{
-    position: relative;
-    padding-bottom: 30%;
-    height: 0;
-    overflow: hidden;
-    border-radius: 3px;
-    border: 1px solid var(--line);
-  }
-  .yt-frame iframe{
-    position: absolute;
-    top:0; left:0;
+  /* Custom audio player styling */
+  .audio-player{
     width: 100%;
-    height: 100%;
-    border: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .audio-player audio{
+    width: 100%;
+    height: 40px;
+    border-radius: 20px;
+    outline: none;
+  }
+  .audio-player audio::-webkit-media-controls-panel{
+    background: var(--card);
+  }
+  .audio-player audio::-webkit-media-controls-current-time-display,
+  .audio-player audio::-webkit-media-controls-time-remaining-display{
+    color: var(--cream);
   }
 
   /* ---------- DIZI / QUOTE ---------- */
@@ -461,8 +465,8 @@
     <div class="vinyl"></div>
     <div class="song-title display">Anlamazdın</div>
     <div class="song-artist">Ayla Dikmen</div>
-    <div class="yt-frame">
-      <iframe src="https://www.youtube.com/embed/L4FRldiA06A" title="Ayla Dikmen - Anlamazdın" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="audio-player">
+      <audio id="bgMusic" src="anlamazdin.mp3" loop preload="auto"></audio>
     </div>
   </div>
 </section>
@@ -502,6 +506,38 @@
 <footer>28.07.2026 — devam ediyor</footer>
 
 <script>
+  // ---- Audio: autoplay with fallback ----
+  const bgMusic = document.getElementById('bgMusic');
+  let musicStarted = false;
+
+  function startMusic(){
+    if(musicStarted) return;
+    bgMusic.volume = 0.6;
+    bgMusic.play().then(()=>{
+      musicStarted = true;
+    }).catch(()=>{
+      // Autoplay blocked — will try again on first user interaction
+    });
+  }
+
+  // Try autoplay on load
+  window.addEventListener('load', startMusic);
+  // Fallback: start on any first click/touch anywhere
+  document.body.addEventListener('click', startMusic, {once:true});
+  document.body.addEventListener('touchstart', startMusic, {once:true});
+
+  // ---- Fullscreen ----
+  function goFullscreen(){
+    const elem = document.documentElement;
+    if(elem.requestFullscreen){
+      elem.requestFullscreen();
+    } else if(elem.webkitRequestFullscreen){
+      elem.webkitRequestFullscreen();
+    } else if(elem.msRequestFullscreen){
+      elem.msRequestFullscreen();
+    }
+  }
+
   // ---- live counters ----
   const start1 = new Date("2026-07-28T00:00:00");
   const start2 = new Date("2026-08-10T22:21:00");
@@ -614,6 +650,8 @@
   }
 
   btnEvet.addEventListener('click', ()=>{
+    startMusic(); // ensure music is playing
+    goFullscreen(); // enter fullscreen
     btnEvet.classList.add('grown');
     spawnHearts();
     setTimeout(()=>{
@@ -625,4 +663,4 @@
 </script>
 
 </body>
-</html>
+  </html>
